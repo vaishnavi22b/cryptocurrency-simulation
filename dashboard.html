@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Your Dashboard</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Account Information</h5>
+        <p><strong>Username:</strong> {{ user['username'] }}</p>
+        <p><strong>Wallet Code:</strong> {{ user['unique_code'] }}</p>
+        <p><strong>Current Balance:</strong> {{ "%.2f"|format(balance) }}</p>
+        <img src="{{ url_for('wallet_qr') }}" alt="QR Code" class="img-thumbnail" style="width:150px; height:150px;">
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Send Money</h5>
+        <form action="{{ url_for('new_transaction') }}" method="post">
+            <div class="form-group">
+                <label for="receiver_code">Receiver's Wallet Code</label>
+                <input type="text" class="form-control" id="receiver_code" name="receiver_code" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="tx_password">Transaction Password</label>
+                <input type="password" class="form-control" id="tx_password" name="tx_password" required>
+            </div>
+            <button type="submit" class="btn btn-success">Send</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Mine New Block</h5>
+        <p>Mine new blocks to confirm pending transactions and earn a reward.</p>
+        <a href="{{ url_for('mine') }}" class="btn btn-warning">Start Mining</a>
+    </div>
+</div>
+{% endblock %}

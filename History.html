@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction History{% endblock %}
+
+{% block content %}
+<h2>Transaction History</h2>
+
+<h3>Sent Transactions</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Receiver Code</th>
+            <th>Amount</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tx in sent %}
+        <tr>
+            <td>{{ tx['timestamp'] | int | strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ tx['receiver_code'] }}</td>
+            <td>{{ "%.2f"|format(tx['amount']) }}</td>
+            <td>{{ tx['status'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Received Transactions</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Sender Code</th>
+            <th>Amount</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tx in received %}
+        <tr>
+            <td>{{ tx['timestamp'] | int | strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ tx['sender_code'] }}</td>
+            <td>{{ "%.2f"|format(tx['amount']) }}</td>
+            <td>{{ tx['status'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

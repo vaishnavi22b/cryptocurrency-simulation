@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<h2>Admin Panel</h2>
+
+<h3>All Users</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Wallet Code</th>
+            <th>Balance</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user['username'] }}</td>
+            <td>{{ user['email'] }}</td>
+            <td>{{ user['unique_code'] }}</td>
+            <td>{{ "%.2f"|format(user['balance']) }}</td>
+            <td>{{ user['created_at'] | int | strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

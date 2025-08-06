@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>CryptoSim Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <script defer src="/static/script.js"></script>
+</head>
+<body class="dark-theme">
+
+  <!-- Theme toggle button fixed at extreme top-right corner -->
+  <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light/Dark Mode">🌞</button>
+
+  <!-- Notification log panel fixed at the extreme top-left corner -->
+  <div id="notificationLog" class="notification-log" style="display:none;">
+    <h3>Notifications</h3>
+    <ul id="notificationList"></ul>
+    <button id="clearNotifications" class="btn" style="margin-top:10px;">Clear</button>
+  </div>
+
+  <div class="navbar">
+    <h1>CryptoSim</h1>
+    <ul class="nav-tabs">
+      <li class="tab-link active" data-tab="send">Send</li>
+      <li class="tab-link" data-tab="mine">Mine</li>
+      <li class="tab-link" data-tab="balances">Balances</li>
+      <li class="tab-link" data-tab="explorer">Explorer</li>
+      <li class="tab-link" data-tab="history">History</li>
+      <li class="tab-link" data-tab="settings">Settings</li>
+      <li class="tab-link" data-tab="help">Help</li>
+    </ul>
+  </div>
+
+  <div id="notif"></div>
+
+  <div class="tab-content">
+
+    <!-- Send Tab -->
+    <div id="send" class="tab-pane active">
+      <h2>Send Cryptocurrency</h2>
+      <form action="/send" method="POST">
+        <input type="text" name="sender" id="send-sender" placeholder="Sender Address" required />
+        <button type="button" id="genWalletBtn" class="btn">Generate Wallet</button>
+        <button type="button" id="claimFaucetBtn" class="btn" disabled>Claim Free Coins</button>
+        <input type="text" name="recipient" placeholder="Recipient Address" required />
+        <input type="number" name="amount" placeholder="Amount" step="0.01" required />
+        <!-- New transaction fee input -->
+        <input type="number" name="fee" placeholder="Transaction Fee (optional)" step="0.01" min="0" />
+        <button type="submit" class="btn">Send</button>
+      </form>
+    </div>
+
+    <!-- Mine Tab -->
+    <div id="mine" class="tab-pane">
+      <h2>Mine a Block</h2>
+      <form action="/mine" method="POST">
+        <input type="text" name="miner" placeholder="Miner Address" required />
+        <button type="submit" class="btn">Mine Block</button>
+      </form>
+      <!-- Mining stats display -->
+      <div id="miningStats" style="margin-top: 20px; color: #ffd700;">
+        Loading mining stats...
+      </div>
+    </div>
+
+    <!-- Balances Tab -->
+    <div id="balances" class="tab-pane">
+      <h2>Balances</h2>
+      <div id="balanceList">Loading balances...</div>
+    </div>
+
+    <!-- Explorer Tab -->
+    <div id="explorer" class="tab-pane">
+      <h2>Blockchain Explorer</h2>
+      <!-- Mempool button and area -->
+      <button id="loadMempool" class="btn" style="margin-bottom:10px;">Show Pending Transactions (Mempool)</button>
+      <div id="mempoolList" style="color:#ffd700;"></div>
+      <div id="blockchainView">Loading blockchain...</div>
+      <div id="blockDetail"></div>
+    </div>
+
+    <!-- History Tab (simplified: no filters) -->
+    <div id="history" class="tab-pane">
+      <h2>Transaction History</h2>
+      <!-- Filters removed as per request -->
+      <div id="transactionList">Loading transactions...</div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div id="settings" class="tab-pane">
+      <h2>Settings / Advanced</h2>
+      <div>
+        <label>Mining Reward: <input type="number" id="reward" step="0.01" min="0" /></label>
+        <label>Difficulty: <input type="number" id="difficulty" min="1" max="6" /></label>
+        <button class="btn" id="updateConfig">Update</button>
+      </div>
+      <div style="margin-top: 12px;">
+        <button class="btn" id="checkValidity">Check Blockchain Validity</button>
+        <span id="validStatus" style="font-weight:bold; margin-left: 12px;"></span>
+      </div>
+      <div style="margin-top: 20px;">
+        <button class="btn" id="resetBlockchainBtn" style="background:#d9534f;">Reset Blockchain</button>
+      </div>
+    </div>
+
+    <!-- Help Tab -->
+    <div id="help" class="tab-pane">
+      <h2>CryptoSim Help &amp; Guide</h2>
+      <div class="help-section">
+        <h3>Getting Started</h3>
+        <ul>
+          <li><b>Generate Wallet:</b> On the <b>Send</b> tab, click “Generate Wallet” for a new address.</li>
+          <li><b>Claim Free Coins:</b> With a wallet generated, click “Claim Free Coins” to receive coins via faucet.</li>
+        </ul>
+        <h3>Tabs Explained</h3>
+        <ul>
+          <li><b>Send</b>: Transfer coins to any wallet. Optionally add <em>fees</em> to prioritize your transaction.</li>
+          <li><b>Mine</b>: Enter your wallet address to mine pending transactions (including your own!). The miner receives block rewards + fees.</li>
+          <li><b>Balances</b>: View current balances for all wallets.</li>
+          <li><b>Explorer</b>: View the blockchain, blocks, and mempool (unconfirmed transactions).</li>
+          <li><b>History</b>: Browse all confirmed transactions (filters removed).</li>
+          <li><b>Settings</b>: Adjust mining reward &amp; difficulty, reset the blockchain, or check validity.</li>
+          <li><b>Help</b>: You are here!</li>
+        </ul>
+        <h3>Tips</h3>
+        <ul>
+          <li><b>Don't lose your wallet address!</b> Wallets are local to this server session.</li>
+          <li>Fees reward miners—higher fees get mined first.</li>
+          <li>Resetting the blockchain will erase all data (except default wallets).</li>
+        </ul>
+        <h3>FAQs</h3>
+        <p><b>Q:</b> Why did my transaction fail?<br>
+          <b>A:</b> Insufficient funds or invalid wallet; check your balances and double-check addresses.</p>
+        <p><b>Q:</b> Where is my wallet saved?<br>
+          <b>A:</b> All wallets and coins are simulated in memory (nothing on-chain or permanent).</p>
+        <h3>Need More Help?</h3>
+        <p>CryptoSim is a learning tool—try everything, break nothing!</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>CryptoSim © 2025 | Simulated Blockchain Environment</p>
+  </footer>
+
+</body>
+</html>
